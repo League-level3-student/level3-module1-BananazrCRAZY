@@ -18,7 +18,7 @@ public class Card extends JButton {
      */
     public static String cardImagesPath = "/CardImages/";
     
-    private int value;
+    public int value;
     private boolean faceUp = false;
     private boolean matched = false;
     private String faceUpImageFilename = null;

@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,7 +19,7 @@ public class GameBoard extends JFrame implements ActionListener {
     static Card secondSelectedCard = null;
     
     // 1. Initialize TOTAL_CARDS to 2;
-    static int TOTAL_CARDS = 0;
+    static int TOTAL_CARDS = 52;
     
     ArrayList<Card> cards;
     
@@ -30,6 +31,7 @@ public class GameBoard extends JFrame implements ActionListener {
     Timer gameClock;
     
     int seconds;
+    int i = 0;
     
     public void setup() {
         gameClock = new Timer(1000, this);
@@ -42,34 +44,71 @@ public class GameBoard extends JFrame implements ActionListener {
         }
         
         // 2. Initialize the ArrayList of Cards declared above
-        
+        cards = new ArrayList<Card>();
         
         // 3. Create TOTAL_CARDS number of objects each with a value of 1.
         //    Also, add action listeners to each Card object and then add each
         //    of the Card objects to the ArrayList of Cards.
-        
+        for (i = 0; i < TOTAL_CARDS; i++) {
+        	Card c = new Card(0);
+        	int num = (int)Math.random() * 13;
+        	switch (num) {
+        	case 0: 
+        		checkNSet(c, num);
+        	case 1: 
+        		checkNSet(c, num);
+        	case 2: 
+        		checkNSet(c, num);
+        	case 3: 
+        		checkNSet(c, num);
+        	case 4: 
+        		checkNSet(c, num);
+        	case 5: 
+        		checkNSet(c, num);
+        	case 6: 
+        		checkNSet(c, num);
+        	case 7: 
+        		checkNSet(c, num);
+        	case 8: 
+        		checkNSet(c, num);
+        	case 9: 
+        		checkNSet(c, num);
+        	case 10: 
+        		checkNSet(c, num);
+        	case 11: 
+        		checkNSet(c, num);
+        	case 12: 
+        		checkNSet(c, num);
+        	}
+        	c.addActionListener(this);
+        	cards.add(c);
+        }
         
         // 4. Use Collections.shuffle() method to randomize the order of
         //    the cards in the ArrayList
-        
+        Collections.shuffle(cards);
         
         // 5. Initialize the panel variable declared above
-        
+        panel = new JPanel();
         
         // 6. Add all of the Card objects to the panel
-        
+        for (Card c: cards) {
+        	panel.add(c);
+        }
         
         // 7. Call the setupGui() method to set up the frame
-        
+        setupGui(cards);
         
         // 8. Call the startGame() method to start the game
-        
+        startGame();
     }
 
     // 9. Fill in the drawCards method to draw all the cards in the ArrayList.
     //    Run your code and verify 2 cards are displayed and the game works.
     public void drawCards() {
-        
+        for (Card c: cards) {
+        	c.draw();
+        }
     }
     
     // 10. 
@@ -206,5 +245,22 @@ public class GameBoard extends JFrame implements ActionListener {
             }
         }
         
+    }
+    
+    public void checkNSet(Card c, int num) {
+    	int alrHave = 0;
+		for (Card car: cards) {
+			if (car.value == num+1) {
+				alrHave++;
+			}
+		}
+		if (alrHave >= 4) {
+			if (num >= 14) {
+				num = 0;
+			}
+			checkNSet(c, num+1);
+		} else {
+			c.value = num+1;
+		}
     }
 }
