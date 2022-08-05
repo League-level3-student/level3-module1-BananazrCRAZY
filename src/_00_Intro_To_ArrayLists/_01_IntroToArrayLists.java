@@ -39,5 +39,7 @@ public class _01_IntroToArrayLists {
     			System.out.println(str.get(i));
     		}
     	}
+    	String s = "";
+    	System.out.println(s.length());
     }
 }
