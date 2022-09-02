@@ -6,7 +6,9 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
@@ -35,42 +37,29 @@ import javax.swing.Timer;
  */
 
 public class WorldClocks implements ActionListener {
-    ClockUtilities clockUtil;
+    ClockUtilities clockUtil = new ClockUtilities();
     Timer timer;
     TimeZone timeZone;
 
-    JFrame frame;
-    JPanel panel;
+    JFrame frame = new JFrame();
+    JPanel panel = new JPanel();
     JTextArea textArea;
+    JButton addCity = new JButton("Add City");
     
     String city;
     String dateStr;
     String timeStr;
     
     public WorldClocks() {
-        clockUtil = new ClockUtilities();
-
-        // The format for the city must be: city, country (all caps)
-        city = "Chicago, US";
-        timeZone = clockUtil.getTimeZoneFromCityName(city);
-        
-        Calendar calendar = Calendar.getInstance(timeZone);
-        String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
-        String dayOfWeek = calendar.getDisplayName( Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-        dateStr = dayOfWeek + " " + month + " " + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
-        
-        System.out.println(dateStr);
-
         // Sample starter program
-        frame = new JFrame();
-        panel = new JPanel();
-        textArea = new JTextArea();
+        addCity.addActionListener(this);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setSize(100, 100);
         frame.add(panel);
-        panel.add(textArea);
-        textArea.setText(city + "\n" + dateStr);
+        panel.add(addCity);
+        
+        addTime();
         
         // This Timer object is set to call the actionPerformed() method every
         // 1000 milliseconds
@@ -79,14 +68,35 @@ public class WorldClocks implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent arg0) {
-        Calendar c = Calendar.getInstance(timeZone);
-        String militaryTime = c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
-        String twelveHourTime = " [" + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) + "]";
-        timeStr = militaryTime + twelveHourTime;
+    public void actionPerformed(ActionEvent e) {
+    	if (addCity.getModel().isPressed()){
+    		addTime();
+    	}
+
+    	Calendar c = Calendar.getInstance(timeZone);
+    	String militaryTime = c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
+    	String twelveHourTime = " [" + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) + "]";
+    	timeStr = militaryTime + twelveHourTime;
+
+    	System.out.println(timeStr);
+    	textArea.setText(city + "\n" + dateStr + "\n" + timeStr);
+    	frame.pack();
+
+    }
+    
+    public void addTime() {
+    	// The format for the city must be: city, country (all caps)
+    	// eg San Diego, US
+    	city = JOptionPane.showInputDialog("The format for the city must be: city (proper noun), country (in all caps)");
+        timeZone = clockUtil.getTimeZoneFromCityName(city);
         
-        System.out.println(timeStr);
-        textArea.setText(city + "\n" + dateStr + "\n" + timeStr);
-        frame.pack();
+        Calendar calendar = Calendar.getInstance(timeZone);
+        String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+        String dayOfWeek = calendar.getDisplayName( Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+        dateStr = dayOfWeek + " " + month + " " + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
+        
+        textArea = new JTextArea();
+        panel.add(textArea);
+        textArea.setText(city + "\n" + dateStr);
     }
 }
